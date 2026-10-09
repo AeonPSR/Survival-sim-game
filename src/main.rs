@@ -1,33 +1,19 @@
-fn main() {	
-	let mut tank = Tank::new(100, 3);
-	
-	println!("The tank has {} liters. It will empty over the course of {} hours.", tank.liters, tank.hours_left());
-	tank.leak_one_hour();
-	tank.leak_one_hour();
-	tank.leak_one_hour();
-	println!("The tank has {} liters", tank.liters);
-	println!("{:?}", tank);
+mod engine;
+mod food;
+
+#[derive(Clone, Debug, PartialEq)]
+enum Event {
+    Dummy,   // placeholder until food.rs exists
 }
 
-#[derive(Debug)]
-struct Tank {
-	liters: i32,
-	leak_per_hour: i32,
-}
+fn main() {
+    let mut the_world = engine::Scheduler::new();
 
-impl Tank {
-	fn new(capacity: i32, leak_per_hour: i32) -> Tank {
-		Tank {
-			liters: capacity,
-			leak_per_hour,
-		}
-	}
-	
-	fn hours_left(&self) -> i32 {
-		self.liters / self.leak_per_hour
-	}
+    the_world.schedule_at(30, Event::Dummy);
+    the_world.schedule_at(10, Event::Dummy);
+    the_world.schedule_at(20, Event::Dummy);
 
-	fn leak_one_hour(&mut self) {
-		self.liters -= self.leak_per_hour;
-	}
+    while let Some((time, event)) = the_world.pop_next() {
+        println!("{} -> {:?}", time, event);
+    }
 }
